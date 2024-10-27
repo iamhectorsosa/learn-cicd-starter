@@ -6,6 +6,9 @@ all:
 build:
 	./scripts/buildprod.sh
 
+migrations:
+	./scripts/migrateup.sh
+
 test:
 	go test ./... -cover
 
