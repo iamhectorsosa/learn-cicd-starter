@@ -1,4 +1,4 @@
-name: CD GitHub Actions
+name: Continuous Deployment
 
 on:
   push:
@@ -17,12 +17,12 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.23.0"
+          go-version-file: ./go.mod"
 
       - name: Build
-        run: ./scripts/buildprod.sh
+        run: make build
 
-      - id: auth
+      - name: Cloud Auth
         uses: google-github-actions/auth@v2
         with:
           credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
@@ -30,7 +30,7 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Deploy Container Image to Artifact Registry
+      - name: Build and Push Container Image to Artifact Registry
         run: gcloud builds submit --tag us-central1-docker.pkg.dev/notely-439907/notely-ar-repo/notely:latest .
 
       - name: Deploy to Cloud Run
